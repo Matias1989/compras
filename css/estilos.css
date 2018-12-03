@@ -1,0 +1,38 @@
+.error {
+    color:red;
+    font-size: 12px;
+}
+
+body {
+  font-family:Helvetica,Futura,Arial,Verdana,sans-serif;
+}
+
+.radio{
+    font-size:13px;
+}
+
+.table{
+  text-align: left;
+  background-color: #838383;
+  border-collapse: collapse;
+}
+
+tr, td{
+  padding: 5px;
+}
+
+.thead{
+  background-color: #5f5f5f;
+  border-bottom: solid 5px;
+}
+
+.borde{
+  border: solid 1px black;
+}
+
+/* input:valid, textarea:valid {
+    background:green;
+  }
+  input:invalid, textarea:invalid {
+    background:red;
+  } */
