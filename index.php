@@ -21,7 +21,6 @@
 			<h1 align="center">Libreria "V & D" - Sistemas de Compras</h1>
 			<a href="listado_proveedor.php"><button><i>Proveedores</i></button></a>
 			<a href="orden_compra.php"><button><i>Compras</i></button></a>
-		    <a href="listado_producto.php"><button><i>Productos</i></button></a>
 		</div>
 		<br>
 		<div>
