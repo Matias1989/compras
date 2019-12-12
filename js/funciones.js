@@ -4,8 +4,8 @@ function confirmar(borrarid, tipo){
             window.location.href='borra_producto.php?borrar_id='
             +borrarid+ '';
             return true;
-        }else if(tipo == 'proveedor'){
-            window.location.href='borra_proveedor.php?borrar_id='
+        }else if(tipo == 'item'){
+            window.location.href='altaitem2.php?borrar_id='
             +borrarid+ '';
             return true;
         }
@@ -25,21 +25,40 @@ function validar(){
         if (tipos == 20 || tipos == 23 || tipos == 24 || tipos == 27 || tipos == 30 || tipos == 33 || tipos == 34) {
             esCuit = true;
         }else{
-            alert("CUIT Invalido, tipo incorrecto."+tipos);
             esCuit = false;
+        }
+
+        if(!esCuit){
+            alert("CUIT Invalido, tipo incorrecto.");
             return false;
         }
     }
+
     if(!expresion.test(email)){
         alert("El email no es valido.");
         return false;
     }
 }
 
-function confirmarEstado(estado){
-    if(confirm("¿Desea cambiar estado del proveedor?")){
-        window.location.href='cambiar_estado.php?estado='
-        +estado+ '';
+function  validarItems() {
+    var producto, precio_unitario, cantidad;
+    precio_unitario = document.getElementById("precio_unitario").value;
+    cantidad = document.getElementById("cantidad").value;
+    producto = document.getElementById("producto").value;
+
+    if ((cantidad && precio_unitario && producto) != "") {
+        document.getElementById("form-datos").submit();
+        return true;
+    }else{
+        alert("Datos incompletos.");
+        return false;
+    }
+}
+
+function confirmarActividad(id_proveedor){
+    if(confirm("¿Desea cambiar actividad del proveedor?")){
+        window.location.href='cambiar_actividad.php?id_proveedor='
+        +id_proveedor+ '';
         return true;
     }
 }

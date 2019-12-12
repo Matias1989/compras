@@ -30,6 +30,9 @@ tr, td{
   border: solid 1px black;
 }
 
+tr.border_bottom td {
+  border-bottom:1pt solid black;
+}
 /* input:valid, textarea:valid {
     background:green;
   }
