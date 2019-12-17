@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <HTML lang="es" xml:lang = "es">
-<?php
-	function convertir($str){
-		$codificacion = mb_detect_encoding($str,"ISO-8859-1,UTF-8");
-		$str = iconv($codificacion, 'UTF-8', $str);
-		return $str;
-	}
-?>
+	<?php
+		function convertir($str){
+			$codificacion = mb_detect_encoding($str,"ISO-8859-1,UTF-8");
+			$str = iconv($codificacion, 'UTF-8', $str);
+			return $str;
+		}
+	?>
 	<HEAD>
 		<meta charset="utf-8">
 		<title>Registre Proveedor.</title>
@@ -61,7 +61,7 @@
 					<tr align="right">
 						<th>Nombre del Proveedor</th>
 						<td><input type="text" name="nombre" id="nombre" value="<?=convertir(
-						($proveedor) ? $proveedor['nombre_proveedor']:'');?>" placeholder="Nombre" required pattern="[A-Za-z-\t-A-Za-z]{4,50}"></td>
+						($proveedor) ? $proveedor['nombre_proveedor']:'');?>" placeholder="Nombre" required pattern="{4,50}"></td>
 					</tr>
 					<tr align="right">
 						<th>Número de Cuit</th>
@@ -105,7 +105,7 @@
 					<tr align="right">
 						<th>Dirección</th>
 						<td><input type="text" name="direccion" id="direccion" value="<?=convertir(
-						($proveedor) ? $proveedor['direccion']:'');?>" placeholder="Dirección" required pattern="[A-Za-z-\t-A-Za-z]{5,50}"></td>
+						($proveedor) ? $proveedor['direccion']:'');?>" placeholder="Dirección" required pattern="[A-Za-z-\t-A-Za-z-ZñÑáéíóúÁÉÍÓÚ\s]{5,50}"></td>
 					</tr>
 					<tr>
 						<td colspan="2" align="center" class=""></td>
@@ -151,7 +151,7 @@
 		</div>
 		<footer>
 			<br><br>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+			<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 		</footer>
 	</body>
 </HTML>

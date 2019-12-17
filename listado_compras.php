@@ -70,9 +70,9 @@
 
 			if(!empty($_POST['proveedor_selected'])){
 				$filtro_proveedor = $_POST['proveedor_selected'];
-				$consulta_compras=mysqli_query($conecta,"SELECT *, aplicaciones_comprobantes.importe AS importe_recibo, comprobantes.importe AS importe_comprobante FROM comprobantes INNER JOIN documentos ON comprobantes.cod_documento = documentos.id_documento INNER JOIN proveedores ON proveedores.id_proveedor = comprobantes.cod_proveedor INNER JOIN aplicaciones_comprobantes ON aplicaciones_comprobantes.id_comprobante_destino = comprobantes.id_comprobante WHERE fecha_emision BETWEEN '$fecha_1' AND '$fecha_2' AND proveedores.activo = 1 AND comprobantes.cod_documento = 1 AND proveedores.id_proveedor = '$filtro_proveedor' ORDER BY fecha_emision");
+				$consulta_compras=mysqli_query($conecta,"SELECT * FROM comprobantes INNER JOIN documentos ON comprobantes.cod_documento = documentos.id_documento INNER JOIN proveedores ON proveedores.id_proveedor = comprobantes.cod_proveedor WHERE fecha_emision BETWEEN '$fecha_1' AND '$fecha_2' AND proveedores.activo = 1 AND comprobantes.cod_documento = 1 AND proveedores.id_proveedor = '$filtro_proveedor' ORDER BY fecha_emision DESC");
 			}else{
-				$consulta_compras=mysqli_query($conecta,"SELECT *, aplicaciones_comprobantes.importe AS importe_recibo, comprobantes.importe AS importe_comprobante FROM comprobantes INNER JOIN documentos ON comprobantes.cod_documento = documentos.id_documento INNER JOIN proveedores ON proveedores.id_proveedor = comprobantes.cod_proveedor INNER JOIN aplicaciones_comprobantes ON aplicaciones_comprobantes.id_comprobante_destino = comprobantes.id_comprobante WHERE fecha_emision BETWEEN '$fecha_1' AND '$fecha_2' AND proveedores.activo = 1 AND comprobantes.cod_documento = 1 ORDER BY fecha_emision");
+				$consulta_compras=mysqli_query($conecta,"SELECT * FROM comprobantes INNER JOIN documentos ON comprobantes.cod_documento = documentos.id_documento INNER JOIN proveedores ON proveedores.id_proveedor = comprobantes.cod_proveedor WHERE fecha_emision BETWEEN '$fecha_1' AND '$fecha_2' AND proveedores.activo = 1 AND comprobantes.cod_documento = 1 ORDER BY fecha_emision DESC");
 			}
         ?>
 		<br>
@@ -108,8 +108,15 @@
 				</tr>
 			   <?php         
 					$total = 0;  
+					$importe_recibo = 0;
                     while($compras = $consulta_compras ? mysqli_fetch_assoc($consulta_compras) : ''){
-						if($compras['importe_comprobante'] == $compras['importe_recibo']){
+						$id_comprobante_check = $compras['id_comprobante'];
+						$consulta_recibo = mysqli_query($conecta,"SELECT importe FROM aplicaciones_comprobantes WHERE aplicaciones_comprobantes.id_comprobante_destino = '$id_comprobante_check'");
+						while($consulta_recibo_array = mysqli_fetch_assoc($consulta_recibo)){
+							$importe_recibo += $consulta_recibo_array['importe'];
+						}
+						
+						if($compras['importe'] == $importe_recibo){
 							$check_cuenta_corriente = false;
 							$color = '#82C082';
 						}else{
@@ -119,7 +126,7 @@
                 ?>
                 <tr bgcolor="<?=$color;?>" align="center">
 				<?if($check_cuenta_corriente){?>
-				<td bgcolor="white"><button onclick="window.location.href='modificar_recibo1.php?id_comprobante=<?=$compras['id_comprobante'];?>'" ><img src="img/modificar.png" height="20" width="30"></button>
+				<td bgcolor="white"><button onclick="window.location.href='altarecibo1.php?id_comprobante=<?=$compras['id_comprobante'];?>'" ><img src="img/modificar.png" height="20" width="30"></button>
 				<?}else{?>
 					<td bgcolor="white">
 				<?}?>
@@ -127,14 +134,15 @@
                     <td><?=convertir($compras['fecha_emision'])?></td>
                     <td><?=convertir($compras['nombre_proveedor'])?></td>
                     <td><?=convertir($compras['nombre_documento'])?></td>
-					<td><?=convertir($compras['nro_comprobante'])?></td>
+					<td><?=convertir(substr($compras['nro_comprobante'],0,5).'-'.substr($compras['nro_comprobante'],5,8))?></td>
                     <td><?=convertir($compras['importe'])?></td>
 					<?php 
 						$total += $compras['importe']; 
 					?>
                 	<td bgcolor="white"><button onclick="window.location.href='ver_factura.php?id_comprobante=<?=$compras['id_comprobante'];?>'" ><img src="img/ver.png" height="20" width="30"></button>
                    	</td>
-					<?php   
+					<?php  
+						$importe_recibo = 0; 
 					}
                     ?>
 				<tr bgcolor="#BFBFBF">
@@ -148,7 +156,7 @@
 		</div>
 		<footer>
 			<br><br>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+			<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 		</footer>
 	</body>
 </HTML>

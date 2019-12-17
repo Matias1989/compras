@@ -18,22 +18,22 @@ if(!empty($_POST['consulta'])){
     $query = "SELECT *, MATCH (nombre_proveedor, direccion, email) AGAINST ('%".$q."%' IN BOOLEAN MODE) AS puntuacion_proveedor, MATCH (localidad) AGAINST ('%".$q."%' IN BOOLEAN MODE) AS puntuacion_localidad FROM proveedores LEFT JOIN localidades ON proveedores.cod_localidad = localidades.id_localidad WHERE MATCH (nombre_proveedor, direccion, email) AGAINST ('%".$q."%' IN BOOLEAN MODE) OR MATCH (localidad) AGAINST ('%".$q."%' IN BOOLEAN MODE) ORDER BY (puntuacion_proveedor + puntuacion_localidad) DESC"; 
 
 }else{
-    $query = "SELECT * FROM proveedores, localidades WHERE proveedores.cod_localidad = localidades.id_localidad order by id_proveedor DESC limit 10";
+    $query = "SELECT * FROM proveedores, localidades WHERE proveedores.cod_localidad = localidades.id_localidad order by nombre_proveedor";
 }
 
 $resultado = mysqli_query($conecta, $query);
 
 if($resultado != ''){
-    $salida = "<table class='tabla_datos' align='center'>
+    $salida = "<table class='tabla_datos' align='right'>
     <tr bgcolor='#BFBFBF'>
-        <th bgcolor='white'><h4></h4></th>
-        <th><h4>Nombre</h4></th>
-        <th><h4>Número Cuit</h4></th>
-        <th><h4>Teléfono</h4></th>
-        <th><h4>Localidad</h4></th>
-        <th><h4>Dirección</h4></th>
-        <th><h4>Correo Electrónico</h4></th>
-        <th bgcolor='white'><h4></h4></th>
+        <th style='width:80px' bgcolor='white'><h4></h4></th>
+        <th style='width:200px'><h4>Nombre</h4></th>
+        <th style='width:120px'><h4>Número Cuit</h4></th>
+        <th style='width:100px'><h4>Teléfono</h4></th>
+        <th style='width:100px'><h4>Localidad</h4></th>
+        <th style='width:200px'><h4>Dirección</h4></th>
+        <th style='width:250px'><h4>Correo Electrónico</h4></th>
+        <th style='width:80px' bgcolor='white'><h4></h4></th>
     </tr>";
 
     while($proveedor = mysqli_fetch_assoc($resultado)){
@@ -43,17 +43,19 @@ if($resultado != ''){
         }else{
             $img_activo = 'red.png';
         }
-        $salida .= "<tr align='left'>
-        <td ><button id='modificar_proveedor' onclick='".$location."'><img src='img/modificar.png' height='18' width='30'></button></td>
+        $salida .= "<tr align='left''>
+        <td ><button id='modificar_proveedor' onclick='".$location."'><img src='img/modificar.png' height='13' width='20'></button></td>
         <td>".convertir($proveedor['nombre_proveedor'])."</td>
         <td>".modificarCiut($proveedor['cuit'])."</td>
         <td>".convertir($proveedor['telefono'])."</td>
         <td>".convertir($proveedor['localidad'])."</td>
         <td>".convertir($proveedor['direccion'])."</td>
         <td>".convertir($proveedor['email'])."</td>
-        <td ><button id='activo' onclick='confirmarActividad(".$proveedor['id_proveedor'].")'><img src='img/".$img_activo."' height='18' width='30'></button></td>";
+        <td ><button id='activo' onclick='confirmarActividad(".$proveedor['id_proveedor'].")'><img src='img/".$img_activo."' height='13' width='20'></button></td>";
     }
-    $salida.="</table><br/>";
+    $salida.="
+    <tr><td colspan='8' align='center'><br>Propiedad de <b>Matías E. Acosta.</b></td></tr>
+</table><br/>";
 }
 
 echo $salida;

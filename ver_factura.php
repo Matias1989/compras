@@ -48,7 +48,7 @@
                 $compras = null;
                 if (isset($_GET['id_comprobante'])) {
                     $id_comprobante = $_GET['id_comprobante'];
-                    $consulta_compras = mysqli_query($conecta,"SELECT * FROM comprobantes INNER JOIN proveedores ON proveedores.id_proveedor = comprobantes.cod_proveedor INNER JOIN condiciones_iva ON proveedores.cod_cond_iva = condiciones_iva.id_cond_iva INNER JOIN localidades ON proveedores.cod_localidad = localidades.id_localidad WHERE comprobantes.id_comprobante = '$id_comprobante'");
+                    $consulta_compras = mysqli_query($conecta,"SELECT * FROM comprobantes INNER JOIN proveedores ON proveedores.id_proveedor = comprobantes.cod_proveedor INNER JOIN condiciones_iva ON proveedores.cod_cond_iva = condiciones_iva.id_cond_iva INNER JOIN localidades ON proveedores.cod_localidad = localidades.id_localidad INNER JOIN condiciones_pago ON condiciones_pago.id_cond_pago = comprobantes.cod_cond_pago WHERE comprobantes.id_comprobante = '$id_comprobante'");
                     $compras = mysqli_fetch_array($consulta_compras);  
                 }
 
@@ -56,30 +56,29 @@
             <table align="center" class="table" width="45%">
                 <tr class="borde">
                     <td>
-                    <b><?=$compras['nombre_proveedor']; ?></b><br/><br/>
+                    <h3><?=convertir($compras['nombre_proveedor']); ?></h3>
 
-                    <b>Direccion:</b>  <?=$compras['direccion'];?><br/><br/>
+                    <b>Direccion:</b>  <?=convertir($compras['direccion']);?><br/><br/>
 
                     <b>Localidad:</b> <?=convertir($compras['localidad']);?><br/><br/>
 
-                    <b>I.V.A. <?=strtoupper($compras['descripcion_ci']);?></b>
+                    <b><?=strtoupper(convertir($compras['descripcion_ci']));?></b>
                     
                     </td>
                     <td align="center" colspan="3">
                             <img src="img/factura-b.png" width="100px" height="160px">
                     </td>
                     <td align="left">
-                        <b>N° Factura: </b> <?=$compras['nro_comprobante'];?><br/><br/>
-                        <b>Fecha: </b> <?=transformarFecha($compras['fecha_emision']);?><br/><br/>
+                        <h3>Factura </h3> <?=substr($compras['nro_comprobante'],0,5).'-'.substr($compras['nro_comprobante'],5,8); ?><br/><br/>
+                        <b>Fecha de emisión: </b> <?=transformarFecha($compras['fecha_emision']);?><br/><br/>
                         <b>CUIT: </b><?=modificarCiut($compras['cuit']);?><br/><br/>
-                        <b>Ingresos Brutos: </b><?=count($compras['nro_ingresos_brutos']) > 1 ? modificarIngresosBrutos($compras['nro_ingresos_brutos']):'';?><br/><br/>
+                        <b>Ingresos Brutos: </b><?=modificarIngresosBrutos($compras['nro_ingresos_brutos']);?><br/><br/>
                     </td>
                 </tr>
-                <tr bgcolor="#BDBDBD">
-                        
-                </tr>
-                <tr bgcolor="#BDBDBD">
-                    <td colspan="5" class="borde"><b>Persona/Empresa:</b> V & D Libreria</td>
+
+                <tr class="borde" bgcolor="#BDBDBD">
+                    <td colspan="3"><b>Persona/Empresa:</b> V & D Libreria</td>
+                    <td colspan="2"><b>Provincia:</b> Santa Fé</td>
                 </tr>
                 <tr class="borde" bgcolor="#BDBDBD">
                     <td colspan="3"><b>Domicilio:</b> Rivadavia 413</td>
@@ -90,7 +89,8 @@
                     <td colspan="2"><b>CUIT: </b>27-33776221-4</td>
                 </tr>
                 <tr class="borde" bgcolor="#BDBDBD">
-                    <td colspan="5"><b>Condición de Venta:</b></td>
+                    <td colspan="3"><b>Cond. de Venta: </b><?=$compras['descripcion_cp']?></td>
+                    <td colspan="3"><b>Teléfono: </b>3413439122</td>
                 </tr>
 
                 <tr align="center" class="thead">
@@ -106,7 +106,7 @@
                 ?>
                 <tr align="center">     
                     <td class="borde"><?=$items['cantidad'];?></td>
-                    <td colspan="2" class="borde" align="left"><?=$items['producto'];?></td>
+                    <td colspan="2" class="borde" align="left"><?=convertir($items['producto']);?></td>
                     <td class="borde"><?=$items['precio_unitario_historico'];?></td>
                     <td class="borde">
                     <?php
@@ -118,15 +118,43 @@
                 </tr>
                 <?}?>
                 <tr align="center" class="borde">
-                    <td colspan="3"><b>DETALLE: </b><?=$compras['detalle'];?></td>
-                    <td></td>
-                    <td><b>TOTAL: </b><?=$compras['importe'];?></td>
+                    <td colspan="3" align='left'><b>DETALLE: </b><?=convertir($compras['detalle']);?></td>
+                    <td><b>TOTAL: </b></td>
+                    <td ><b><?=$compras['importe'];?></b></td>
                 </tr>
             </table>
-		</div>
+		</div><br>
+       <div align='center'>
+       <?php
+        $consulta_recibo=mysqli_query($conecta,"SELECT * FROM aplicaciones_comprobantes, comprobantes WHERE aplicaciones_comprobantes.id_comprobante_destino = '$id_comprobante' AND comprobantes.id_comprobante = aplicaciones_comprobantes.id_comprobante_origen");
+        $array_recibo = [];
+        while($recibo = mysqli_fetch_assoc($consulta_recibo)) {
+            array_push($array_recibo,$recibo['importe'].'|'.substr($recibo['nro_comprobante'],0,5).'-'.substr($recibo['nro_comprobante'],5,8).'|'.transformarFecha($recibo['fecha_emision']));
+
+            $str_recibo = implode($array_recibo,'~');
+        }?>
+            <input type='hidden' value='<?=$str_recibo?>' id='datos_recibo'>
+            <button id='ver_recibo'><i><b>Ver Recibos</b></i></button>
+        </div> 
 		<footer>
 			<br><br>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+			<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 		</footer>
 	</body>
 </HTML>
+<script> 
+$(document).ready(function(){
+
+    $("#ver_recibo").on('click',function(){
+        var datosRecibo = $("#datos_recibo").val();
+        datosRecibo = datosRecibo.split('~');
+        var textHtml = '';
+        for (var i = 0; i < datosRecibo.length; i++) {
+            textHtml += 'Nro Recibo: '+datosRecibo[i].split('|')[1]+
+            '\nFecha emisión: '+datosRecibo[i].split('|')[2]+
+            '\nImporte: $'+datosRecibo[i].split('|')[0]+'\n\n';
+        }
+        alert(textHtml);
+    });
+});
+</script>

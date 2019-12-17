@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <HTML lang="es" xml:lang = "es">
-<?php
-	function convertir($str){
-		$codificacion = mb_detect_encoding($str,"ISO-8859-1,UTF-8");
-		$str = iconv($codificacion, 'UTF-8', $str);
-		return $str;
-	}
-?>
+	<?php
+		function convertir($str){
+			$codificacion = mb_detect_encoding($str,"ISO-8859-1,UTF-8");
+			$str = iconv($codificacion, 'UTF-8', $str);
+			return $str;
+		}
+	?>
 	<HEAD>
 		<meta charset="utf-8">
 		<title>Registre Producto.</title>
@@ -59,12 +59,12 @@
 					<tr>
 						<th align="right">Nombre Producto</th>
 						<td><input type="text" name="nombre" id="nombre" value="<?=convertir(
-						($producto) ? $producto['producto']:'');?>" placeholder="Nombre" required pattern="[A-Za-z-\t-A-Za-z]{4,50}"></td>
+						($producto) ? $producto['producto']:'');?>" placeholder="Nombre" required pattern="{4,50}"></td>
 					</tr>
 					<tr>
 						<th align="right">Precio Unitario</th>
 						<td><input type="text" name="precio" id="precio" value="<?=convertir(
-						($producto) ? $producto['precio_unitario']:'');?>" placeholder="Precio Unitario"  pattern="[0-9]{1,15}" required/></td>
+						($producto) ? $producto['precio_unitario']:'');?>" placeholder="Precio Unitario"  pattern="^[0-9]{1,11}$|^[0-9]{1,11}\.[0-9]{1,5}" required/></td>
 					</tr>
 					<tr>
 						<th align="right">Categoria</th>
@@ -102,7 +102,7 @@
 		</div>
 		<footer>
 			<br><br>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+			<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 		</footer>
 	</body>
 </HTML>

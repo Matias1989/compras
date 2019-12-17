@@ -40,10 +40,8 @@
 
 		</div>
 		<script src="js/proveedor.js"></script>
+		
 
-		<footer>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
-		</footer>
 	</body>
 </HTML>
 

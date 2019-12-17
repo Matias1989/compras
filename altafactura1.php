@@ -32,11 +32,6 @@
 					</tr>
 					<tr align="right">
 						<td>
-							<a href="listado_compras.php"><button><i>Pagos</i></button></a><br/><br/>
-						</td>
-					</tr>
-					<tr align="right">
-						<td>
 							<a href="listado_productos.php"><button><i>Productos</i></button></a><br/><br/>
 						</td>
 					</tr>
@@ -91,6 +86,14 @@
 						value="<?=convertir(($comprobante) ? $comprobante['nro_comprobante']:'');?>" placeholder="Comprobante" pattern="[0-9]{1,8}" size="8" required></td>
 					</tr>
 					<tr>
+						<th align="right">Número de Recibo</th>
+						<td><input type="text" name="codigo_recibo" id="codigo_recibo" 
+						value="" placeholder="N°" pattern="[0-9]{1,5}" size="2" required>
+
+						<input type="text" name="nro_recibo" id="nro_recibo" 
+						value="" placeholder="Recibo" pattern="[0-9]{1,8}" size="8" required></td>
+					</tr>
+					<tr>
 						<th align="right">Fecha de Emisión</th>
 						<td><input type="date" name="f_emision" id="f_emision" value="<?=convertir(
 						($comprobante) ? $comprobante['fecha_emision']:'');?>" required/></td>
@@ -143,7 +146,7 @@
 		</div>
 		<footer>
 			<br><br>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+			<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 		</footer>
 	</body>
 </HTML>

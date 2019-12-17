@@ -69,9 +69,8 @@ function mostrar_precio($conecta){
 				$comprobante_items = null;
 				if (isset($_GET['id'])) {   
 					$id = $_GET['id'];
-					$check_cuenta_corriente = false;
 					$consulta_comprobante = mysqli_query($conecta, "SELECT * FROM
-					comprobantes, productos, proveedores, comprobantes_items WHERE comprobantes_items.cod_comprobante = comprobantes.id_comprobante AND comprobantes_items.cod_producto = productos.id_producto AND comprobantes_items.cod_comprobante = '$id'");
+					comprobantes, productos, proveedores, comprobantes_items, condiciones_pago WHERE comprobantes_items.cod_comprobante = comprobantes.id_comprobante AND comprobantes_items.cod_producto = productos.id_producto AND condiciones_pago.id_cond_pago = comprobantes.cod_cond_pago AND comprobantes_items.cod_comprobante = '$id'");
 					$comprobante_items = mysqli_fetch_array($consulta_comprobante);
 				}
 				?>
@@ -117,18 +116,15 @@ function mostrar_precio($conecta){
 				</table>
 			<br>
 			<?php
-				if (isset($comprobante_items['id_comprobante_item'])) {		
-					if($comprobante_items['cod_cond_pago'] == 2){
-						$check_cuenta_corriente = true;
-					}		
+				if (isset($comprobante_items['id_comprobante_item'])) {				
 				?>
 			<div>
 				<table align="center">
 					<tr> 
-						<th colspan='4'> Nombre Proveedor: <?=$comprobante_items['nombre_proveedor'];?> </th>
+						<th colspan='4'> Proveedor: <?=convertir($comprobante_items['nombre_proveedor']);?> </th>
 					</tr>
 					<tr>
-						<th colspan='2'> N° Comprobante: <?=$comprobante_items['nro_comprobante'];?> </th>
+						<th colspan='2'> N° Comprobante: <?=substr($comprobante_items['nro_comprobante'],0,5).'-'.substr($comprobante_items['nro_comprobante'],5,8)?></th>
 						<th colspan='2'> Fecha Emisión: <?=$comprobante_items['fecha_emision'];?></th>
 					</tr>	
 					<tr bgcolor="#BFBFBF">
@@ -147,8 +143,8 @@ function mostrar_precio($conecta){
 					?>
 					<tr bgcolor="" align="center">
 						<td><?=convertir($items['cantidad'])?></td>
-						<td align="left"><?=convertir($items['producto'])?></td>
-						<td><?=convertir($items['precio_unitario_historico'])?></td>
+						<td align="left"><?=$items['producto']?></td>
+						<td><?=$items['precio_unitario_historico']?></td>
 						<td><?php 
 								$subtotal1 = $items['cantidad'] * $items['precio_unitario_historico'];
 								$total = $total + $subtotal1;
@@ -172,7 +168,7 @@ function mostrar_precio($conecta){
 					}else{
 					?> 
 					<tr bgcolor="#BFBFBF">
-						<th colspan='4' name='detalle' >Detalle: &nbsp;<?=$detalle['detalle'];?></th>
+						<th colspan='4' name='detalle' >Detalle: &nbsp;<?=convertir($detalle['detalle']);?></th>
 						<th bgcolor="white"></th>
 					</tr>
 					<?}?>
@@ -181,7 +177,7 @@ function mostrar_precio($conecta){
 						<th ><?=$total;?><input name='total' id='total' value='<?=$total;?>' type='hidden'></th>
 						<th bgcolor="white"></th>
 					</tr>
-					<?if($check_cuenta_corriente){?>
+					<?if(!$comprobante_items['contado']){?>
 					<tr bgcolor="#BFBFBF">
 						<th colspan='3'>Pago parcial</th>
 						<th><input name='pago_parcial' id='pago_parcial' value='' type='text'></th>
@@ -203,7 +199,7 @@ function mostrar_precio($conecta){
 			</div>
 	<footer>
 		<br><br>
-		<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+		<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 	</footer>
 </body>
 </HTML>
@@ -211,8 +207,8 @@ function mostrar_precio($conecta){
 <script>  
 $(document).ready(function(){
 	
-	$("#_categoria").select2({width: '50%'});
-	$("#producto").select2({width: '50%'});
+	$("#_categoria").select2({width: '100%'});
+	$("#producto").select2({width: '100%'});
 	$("#producto").prop("disabled", true);
 	$('#producto').change(function(){  
 		$("#producto").prop("disabled", false);
@@ -244,7 +240,7 @@ $(document).ready(function(){
 		var pagoParcial = $("#pago_parcial").val();
 		var total = $("#total").val();
 		
-		if(total < pagoParcial || pagoParcial == ''){
+		if(pagoParcial == '' || total < pagoParcial){
 			alert("Monto parcial incorrecto");
 			return false;
 		}

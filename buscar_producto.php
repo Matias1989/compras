@@ -34,10 +34,10 @@ if($resultado != ''){
         #$id_producto = $producto['id_producto'].','.'producto';
         $tipo = "producto";
         $location = 'window.location.href="altaproducto1.php?id_producto='.$producto["id_producto"].'"';
-        $salida .= "<tr align='left'>
+        $salida .= "<tr>
         <td ><button id='modificar_producto' onclick='".$location."'><img src='img/modificar.png' height='18' width='30'></button></td>
-        <td>".convertir($producto['producto'])."</td>
-        <td>".$producto['precio_unitario']."</td>
+        <td align='left'>".convertir($producto['producto'])."</td>
+        <td align='center'>".$producto['precio_unitario']."</td>
         <td ><button value='".$producto['id_producto']."' id='borrar_producto' onclick='confirmar(".$producto['id_producto'].",`producto`)'><img img src='img/eliminar.png' height='18' width='30'></button></td>";
     }
     $salida.="</table><br/>";

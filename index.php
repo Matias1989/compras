@@ -29,7 +29,7 @@
             <img src="img/fondo.png">
 		</div>
 		<footer>
-			<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+			<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 		</footer>
 	</body>
 </HTML>

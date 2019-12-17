@@ -29,7 +29,11 @@
 						<a href="altaproducto1.php"><button><i>Insertar Producto</i></button></a><br/><br/>
 					</td>
 				</tr>
-				
+				<tr align="right">
+					<td>
+						<a href="altacategoria1.php"><button><i>Insertar Categoría</i></button></a><br/><br/>
+					</td>
+				</tr>
 				<tr align="right">
 					<td>
 						<a href="listado_proveedores.php"><button><i>Proveedores</i></button></a>
@@ -64,7 +68,7 @@
 			<script src="js/producto.js"></script>
 
 			<footer>
-				<p align="center">Material recopilado y organizado por <b>Matías E. Acosta.</b></p>
+				<p align="center">Propiedad de <b>Matías E. Acosta.</b></p>
 			</footer>
 	</body>
 </HTML>
